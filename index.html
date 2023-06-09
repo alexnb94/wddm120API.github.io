@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports News App</title>
+    <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .carousel-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .carousel {
+      position: relative;
+      width: 50%;
+      height: 50%;
+      overflow: hidden;
+    }
+
+    .carousel-item {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .carousel-item p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Sports News</h1>
+  <div class="carousel-container">
+    <div class="carousel">
+      <div id="news-container"></div>
+    </div>
+  </div>
+</head>
+<body>
+  
+  <div id="news-container"></div>
+
+  <script>
+    // Fetch sports news from API and display them
+    const options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': '67f2e8a736mshd6ec5d0bfcc47f1p1df50bjsn0dc6bb81d805',
+		'X-RapidAPI-Host': 'livescore6.p.rapidapi.com'
+	}
+};
+    fetch('https://livescore6.p.rapidapi.com/news/v2/list', options)
+      .then(response => response.json())
+      .then(data => {
+        const newsContainer = document.getElementById('news-container');
+        console.log(data.topStories)
+        data.topStories.forEach(news => {
+          const newsItem = document.createElement('div');
+          newsItem.innerHTML = `
+            <h3>${news.title}</h3>
+            <a href=${news.url}>Read More!</a>
+            <hr>
+          `;
+          newsContainer.appendChild(newsItem);
+        });
+      })
+      .catch(error => console.log(error));
+
+    // Handle form submission
+    document.getElementById('news-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+
+      // Create the POST request
+      fetch('https://livescore6.p.rapidapi.com/news/v2/list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, content })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data if needed
+        console.log(data);
+      })
+      .catch(error => console.log(error));
+    });
+  </script>
+</body>
+</html>
